@@ -91,6 +91,8 @@ local_clone(){
     cp -r /opt/sspanel/ss-panel-v3-mod_Uim/public/images /opt/sspanel/public/images
     cp -r /opt/sspanel/ss-panel-v3-mod_Uim/config /opt/sspanel/config
     cp -r /opt/sspanel/ss-panel-v3-mod_Uim/sql /opt/sspanel/sql
+    rm -rf /root/sql
+    cp -r /opt/sspanel/ss-panel-v3-mod_Uim/sql /root/sql 
     cp /opt/sspanel/ss-panel-v3-mod_Uim/config/.config.php.example /opt/sspanel/config/.config.php
     sed -i "s/localhost/mysql/g" /opt/sspanel/config/.config.php
     sed -i "s|\['db_password'\]\s*=\s*'.*'|['db_password'] = '${rootpwd}'|" /opt/sspanel/config/.config.php
@@ -102,7 +104,7 @@ mysql_init(){
     redbg "程序正在等待数据库完成初始化约3s"
     sleep 3s
     cd /opt/sspanel
-    docker-compose exec mysql mysql -uroot -p$rootpwd sspanel < /root/sql/glzjin_all.sql
+    docker-compose exec -T mysql mysql -uroot -p$rootpwd sspanel < /root/sql/glzjin_all.sql
     sleep 3s
 }
 # docker exec some-mysql sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /some/path/on/your/host/all-databases.sql
