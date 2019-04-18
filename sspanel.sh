@@ -102,7 +102,7 @@ mysql_init(){
     redbg "程序正在等待数据库完成初始化约3s"
     sleep 3s
     cd /opt/sspanel
-    docker-compose exec mysql mysql -uroot -p$rootpwd sspanel < /root/sql/glzjin_all.sql 
+    docker-compose exec mysql mysql -uroot -p$rootpwd sspanel < /root/sql/glzjin_all.sql
     sleep 3s
 }
 # docker exec some-mysql sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /some/path/on/your/host/all-databases.sql
@@ -117,8 +117,7 @@ notice(){
     green "=================================================="
     green "搭建成功，现在您可以直接访问了"
     green "---------------------------"
-    green " 首页地址： http://ip:$port"
-    green " 后台地址：http://ip:$port/login"
+    green " 网站地址： http://ip:$port"
     green " 网站配置文件： /opt/sspanel/confing/config.php"
     green " 网站图片修改： /opt/sspanel/public/images"
     green "---------------------------"
