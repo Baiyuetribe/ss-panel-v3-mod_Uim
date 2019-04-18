@@ -136,8 +136,7 @@ install_main(){
     blue "获取配置文件"
     mkdir -p /opt/sspanel && cd /opt/sspanel
     rm -f docker-compose.yml
-    #wget http://23.94.24.115:10080/baiyue/ss/raw/master/docker-compose.yml  
-    wget https://raw.githubusercontent.com/Baiyuetribe/ss-panel-v3-mod_Uim/docker/docker-compose.yml    
+    wget https://raw.githubusercontent.com/Baiyuetribe/ss-panel-v3-mod_Uim/docker/docker-compose.yml
     blue "配置文件获取成功"
     sleep 2s
     white "请仔细填写参数，部署完毕会反馈已填写信息"
