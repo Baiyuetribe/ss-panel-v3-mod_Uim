@@ -101,10 +101,10 @@ local_clone(){
     greenbg "本地初始化完成"
 }
 mysql_init(){
-    redbg "程序正在等待数据库完成初始化约3s"
-    sleep 3s
+    redbg "程序正在等待初始化约10s"
+    sleep 10s
     cd /opt/sspanel
-    docker-compose exec -T mysql mysql -uroot -p$rootpwd sspanel < /root/sql/glzjin_all.sql
+    docker-compose exec -T mysql mysql -uroot -p${rootpwd} sspanel < /root/sql/glzjin_all.sql
     sleep 3s
 }
 # docker exec some-mysql sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /some/path/on/your/host/all-databases.sql
