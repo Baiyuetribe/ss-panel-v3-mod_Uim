@@ -102,7 +102,7 @@ mysql_init(){
     redbg "程序正在等待数据库完成初始化约3s"
     sleep 3s
     cd /opt/sspanel
-    docker-compose exec mysql sh -c "exec mysqldump --all-databases -uroot -p$rootpwd" > /opt/sspanel/sql/glzjin_all.sql
+    docker-compose exec mysql mysql -uroot -p$rootpwd sspanel < /root/sql/glzjin_all.sql 
     sleep 3s
 }
 # docker exec some-mysql sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /some/path/on/your/host/all-databases.sql
@@ -136,8 +136,8 @@ install_main(){
     blue "获取配置文件"
     mkdir -p /opt/sspanel && cd /opt/sspanel
     rm -f docker-compose.yml
-    wget https://raw.githubusercontent.com/Baiyuetribe/ss-panel-v3-mod_Uim/docker/docker-compose.yml  
-    # wget https://raw.githubusercontent.com/Baiyuetribe/sspanel/docker/docker-compose.yml      
+    #wget http://23.94.24.115:10080/baiyue/ss/raw/master/docker-compose.yml  
+    wget https://raw.githubusercontent.com/Baiyuetribe/sspanel/docker/docker-compose.yml      
     blue "配置文件获取成功"
     sleep 2s
     white "请仔细填写参数，部署完毕会反馈已填写信息"
@@ -162,7 +162,7 @@ install_main(){
         local_clone
         yellow "part2:镜像拉取"
         sed -i "s/数据库密码/$rootpwd/g" /opt/sspanel/docker-compose.yml
-        sed -i "s/80:80/$port:80/g" /opt/sspanel/docker-compose.yml
+        sed -i "s/访问端口/$port/g" /opt/sspanel/docker-compose.yml
         greenbg "已完成配置部署"
         greenbg "程序将下载镜像，请耐心等待下载完成"
         cd /opt/sspanel

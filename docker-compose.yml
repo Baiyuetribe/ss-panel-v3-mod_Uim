@@ -17,7 +17,7 @@ services:
     image: baiyuetribe/sspanel:nginx 
     restart: always
     ports:
-      - "80:80"
+      - "访问端口:80"
     networks:
       - frontend
     depends_on:
@@ -25,6 +25,7 @@ services:
   mysql:
     image: mysql:5.7
     volumes:
+      - /opt/sspanel/sql:/root/sql
       - /opt/sspanel/mysql:/var/lib/mysql
     environment:
       - "TZ=Asia/Shanghai"
