@@ -5,7 +5,6 @@ config/.config.php
 config/.config.php.bak
 404.html
 index.html
-public/ssr-download/
 public/images/*.*
 public/theme/material/css/images/bg
 storage/trimepay_notify.log
