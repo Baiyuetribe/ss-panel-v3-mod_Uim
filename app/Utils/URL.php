@@ -109,6 +109,77 @@ class URL
         }
     }
 
+    public static function getClashInfo($user) {
+        $result = [];
+        $v2ray_nodes = $nodes=Node::where(
+            function ($query) {
+                $query->where('sort', 11);
+            }
+        )->where(
+            function ($query) use ($user){
+                $query->where("node_group", "=", $user->node_group)
+                    ->orWhere("node_group", "=", 0);
+            }
+        )->where("type", "1")->where("node_class", "<=", $user->class)->orderBy("name")->get();
+
+        foreach ($v2ray_nodes as $v2ray_node) {
+            $node_explode = explode(';', $v2ray_node->server);
+            $docs = [
+                "name" => $v2ray_node->name,
+                "type" => "vmess",
+                "server" => $node_explode[0],
+                "port" => $node_explode[1],
+                "uuid" => $user->getUuid(),
+                "alterId" => $node_explode[2],
+                "cipher" => "auto",
+            ];
+
+            if (count($node_explode) >= 4) {
+                if ($node_explode[3] == 'ws') {
+                    $docs['network'] = 'ws';
+                } else if ($node_explode[3] == 'tls') {
+                    $docs['tls'] = true;
+                }
+            }
+
+            if (count($node_explode) >= 5) {
+                if ($node_explode[4] == "ws") {
+                    $docs['network'] = 'ws';
+                }
+            }
+
+            $result[] = $docs;
+        }
+
+        if (self::SSCanConnect($user, 0)) {
+            $shadowsocks_nodes = Node::where(
+                function ($query) {
+                    $query->where('sort', 0)
+                        ->orwhere('sort', 10);
+                }
+            )->where(
+                function ($query) use ($user){
+                    $query->where("node_group", "=", $user->node_group)
+                        ->orWhere("node_group", "=", 0);
+                }
+            )->where("type", "1")->where("node_class", "<=", $user->class)->orderBy("name")->get();
+
+            foreach ($shadowsocks_nodes as $node) {
+                $result[] = [
+                    "name" => $node->name,
+                    "type" => "ss",
+                    "server" => $node->server,
+                    "port" => $user->port,
+                    // TODO: method mapper
+                    "cipher" => $user->method,
+                    "password" => $user->passwd,
+                ];
+            }
+        }
+
+        return $result;
+    }
+
     public static function getSSConnectInfo($user) {
         $new_user = clone $user;
         if(URL::CanObfsConnect($new_user->obfs) == 5) {
@@ -134,23 +205,20 @@ class URL
         $new_user->protocol = str_replace("_compatible", "", $new_user->protocol);
         return $new_user;
     }
-
     public static function getAllItems($user, $is_mu = 0, $is_ss = 0) {
         $return_array = array();
         if ($user->is_admin) {
             $nodes=Node::where(
                 function ($query) {
                     $query->where('sort', 0)
-                        ->orwhere('sort', 10)
-                        ->orwhere('sort', 13);
+                        ->orwhere('sort', 10);
                 }
             )->where("type", "1")->orderBy("name")->get();
         } else {
             $nodes=Node::where(
                 function ($query) {
                     $query->where('sort', 0)
-                        ->orwhere('sort', 10)
-                        ->orwhere('sort', 13);
+                        ->orwhere('sort', 10);
                 }
             )->where(
                 function ($query) use ($user){
@@ -234,24 +302,22 @@ class URL
         }
         return $return_array;
     }
-    public static function getAllUrl($user, $is_mu, $is_ss = 0) {
+    public static function getAllUrl($user, $is_mu, $is_ss = 0, $enter = 0) {
         $return_url = '';
-		if(!$is_ss){
-			$return_url .= URL::getUserTraffic($user, $is_mu).PHP_EOL;
-			$return_url .= URL::getUserClassExpiration($user, $is_mu).PHP_EOL;
-		}
+        $return_url .= URL::getUserTraffic($user, $is_mu).($enter == 0 ? ' ' : "\n");
+        $return_url .= URL::getUserClassExpiration($user, $is_mu).($enter == 0 ? ' ' : "\n");
         if(strtotime($user->expire_in)<time()){
 			return $return_url;
 		}
         $items = URL::getAllItems($user, $is_mu, $is_ss);
         foreach($items as $item) {
-            $return_url .= URL::getItemUrl($item, $is_ss).PHP_EOL;
+            $return_url .= URL::getItemUrl($item, $is_ss).($enter == 0 ? ' ' : "\n");
         }
-        if(Config::get('mergeSub')=='true' and in_array($is_mu, array(0, 1))){
+        if(Config::get('mergeSub') and in_array($is_mu, array(0, 1))){
             $is_mu = $is_mu==0?1:0;
             $items = URL::getAllItems($user, $is_mu, $is_ss);
             foreach($items as $item) {
-                $return_url .= URL::getItemUrl($item, $is_ss).PHP_EOL;
+                $return_url .= URL::getItemUrl($item, $is_ss).($enter == 0 ? ' ' : "\n");
             }
         }
         return $return_url;
@@ -271,15 +337,13 @@ class URL
                 $personal_info = $item['method'].':'.$item['passwd'];
                 $ssurl = "ss://".Tools::base64_url_encode($personal_info)."@".$item['address'].":".$item['port'];
                 $plugin = '';
-                if(in_array($item['obfs'], $ss_obfs_list) || $item['obfs'] == "v2ray") {
+                if(in_array($item['obfs'], $ss_obfs_list)) {
                     if(strpos($item['obfs'], 'http') !== FALSE) {
                         $plugin .= "obfs-local;obfs=http";
-                    } elseif (strpos($item['obfs'], 'tls') !== false) {
-                        $plugin .= "obfs-local;obfs=tls";
                     } else {
-                        $plugin .= "v2ray;".$item['obfs_param'];
+                        $plugin .= "obfs-local;obfs=tls";
                     }
-                    if($item['obfs_param'] != '' && $item['obfs'] != "v2ray") {
+                    if($item['obfs_param'] != '') {
                         $plugin .= ";obfs-host=".$item['obfs_param'];
                     }
                     $ssurl .= "?plugin=".rawurlencode($plugin);
@@ -289,43 +353,59 @@ class URL
             return $ssurl;
         }
     }
-    public static function getV2Url($user, $node, $arrout = 0){
-        $item = Tools::v2Array($node->server);
-        $item['v'] = "2";
+    public static function getV2Url($user, $node){
+        $node_explode = explode(';', $node->server);
+        $item = [
+            'v'=>'2',
+            'host'=>'',
+            'path'=>'',
+            'tls'=>''
+        ];
         $item['ps'] = $node->name;
+        $item['add'] = $node_explode[0];
+        $item['port'] = $node_explode[1];
         $item['id'] = $user->getUuid();
-        
-        if ($arrout == 0) {
-            return "vmess://".base64_encode((json_encode($item, JSON_UNESCAPED_UNICODE)));
-        } else {
-            return $item;
+        $item['aid'] = $node_explode[2];
+        $item['net'] = "tcp";
+        $item['type'] = "none";
+        if (count($node_explode) >= 4) {
+            $item['net'] = $node_explode[3];
+            if ($item['net'] == 'ws') {
+                $item['path'] = '/';
+            } else if ($item['net'] == 'tls') {
+                $item['tls'] = 'tls';
+            }
         }
+        if (count($node_explode) >= 5 ) {
+            if (in_array($item['net'], array("kcp", "http"))){
+
+                $item['type'] = $node_explode[4];
+            } else if ($node_explode[4]=='ws'){
+                $item['net'] = 'ws';
+            }
+        }
+
+        if (count($node_explode) >= 6) {
+            $item = array_merge($item, URL::parse_args($node_explode[5]));
+        }
+
+        return "vmess://".base64_encode((json_encode($item, JSON_UNESCAPED_UNICODE)));
     }
 
-    public static function getAllVMessUrl($user, $arrout = 0) {
-        $nodes = Node::where(
-            function ($query) {
-                $query->where('sort', 11)
-                    ->orwhere('sort', 12);
-            }
-            )->where(
+    public static function getAllVMessUrl($user) {
+        $nodes = Node::where('sort', 11)->where(
             function ($query) use ($user){
                 $query->where("node_group", "=", $user->node_group)
                     ->orWhere("node_group", "=", 0);
             }
         )->where("type", "1")->where("node_class", "<=", $user->class)->orderBy("name")->get();
 
-        if ($arrout == 0) {
-            $result = "";
-            foreach ($nodes as $node) {
-                $result .= (URL::getV2Url($user, $node, $arrout) . "\n");
-            }
-        } else {
-            $result = [];
-            foreach ($nodes as $node) {
-                array_push($result, URL::getV2Url($user, $node, $arrout));
-            }
+        $result = "";
+
+        foreach ($nodes as $node) {
+            $result .= (URL::getV2Url($user, $node) . "\n");
         }
+
         return $result;
     }
 
@@ -341,7 +421,7 @@ class URL
 		$array_all['traffic_used']=Tools::flowToGB($user->u+$user->d);
 		$array_all['traffic_total']=Tools::flowToGB($user->transfer_enable);
 		$array_all['expiry']=$user->class_expire;
-		$array_all['url']=Config::get('subUrl').LinkController::GenerateSSRSubCode($user->id, 0).'?mu=3';
+		$array_all['url']=Config::get('baseUrl').'/link/'.LinkController::GenerateSSRSubCode($user->id, 0).'?mu=3';
 		$plugin_options='';
 		if(strpos($user->obfs,'http')!=FALSE){
 			$plugin_options='obfs=http';
@@ -362,37 +442,15 @@ class URL
 		$nodes = Node::where('type',1)->where('node_class','<=',$user->class)
 			->where(function ($func){
 				$func->where('sort', '=', 0)
-                    ->orwhere('sort', '=', 10)
-                    ->orwhere('sort', '=', 13);
+					->orwhere('sort', '=', 10);
 			})
 			->where(function ($func) use ($user){
-				$func->where('node_group', '=', $user->node_group)
+				$func->where('node_group', '=', $user->group)
 					->orwhere('node_group', '=', 0);
 			})->orderBy('name')->get();
 		$server_index=1;
 		foreach($nodes as $node){
-            $server=array();
-            if ($node->sort==13) {
-                if (URL::CanMethodConnect($user->method)!=2) {
-                    continue;
-                }
-                $ssv2Array = Tools::ssv2Array($node->server);
-                $server['server']=$ssv2Array['add'];
-                $server['id']=$server_index;
-                $server['remarks']=$node->name.' - 单多'.$ssv2Array['port'].'端口';
-                $server['port']=$ssv2Array['port'];
-                $server['encryption']=$user->method;
-                $server['password']=$user->passwd;
-                $server['plugin']='v2ray';
-                if ($ssv2Array['tls'] == "tls" && $ssv2Array['net'] == "ws") {
-                    $server['plugin_options']="mode=ws;security=tls;path=".$ssv2Array['path'].";host=".$user->getMuMd5();
-                } else {
-                    $server['plugin_options']="mode=ws;security=none;path=".$ssv2Array['path'].";host=".$user->getMuMd5();
-                }
-                array_push($array_server, $server);
-                $server_index++;
-                continue;
-            }
+			$server=array();
 			$server['id']=$server_index;
 			$server['server']=$node->server;
 			//判断是否是中转起源节点
@@ -480,10 +538,10 @@ class URL
         $plugin = "";
         if(in_array($item['obfs'], $ss_obfs_list)) {
             if(strpos($item['obfs'], 'http') !== FALSE) {
-                $plugin .= ",obfs=http";
+                $plugin .= "obfs=http";
             }
 			else {
-                $plugin .= ",obfs=tls";
+                $plugin .= "obfs=tls";
             }
             if($item['obfs_param'] != '') {
                 $plugin .= ",obfs-host=".$item['obfs_param'];
@@ -491,6 +549,7 @@ class URL
 			else {
 				$plugin .= ",obfs-host=wns.windows.com";
 			}
+
         }
         return $plugin;
     }
@@ -525,7 +584,7 @@ class URL
             $mu_user->obfs_param = $user->getMuMd5();
             $mu_user->protocol_param = $user->id.":".$user->passwd;
             $user = $mu_user;
-            if(Config::get('mergeSub')!='true'){
+            if(!Config::get('mergeSub')){
                 $node_name .= " - ".$mu_port." 单端口";
             }
         }
@@ -540,32 +599,17 @@ class URL
             }
             $user = URL::getSSRConnectInfo($user);
         }
-        if ($node->sort == 13) {
-            $server = Tools::ssv2Array($node->server);
-            $return_array['address'] = $server['add'];
-            $return_array['port'] = $server['port'];
-            $return_array['protocol'] = "origin";
-            $return_array['protocol_param'] = "";
-            $return_array['path'] = $server['path'];
-            $return_array['obfs'] = "v2ray";
-            if ($server['tls'] == "tls" && $server['net'] == "ws") {
-                $return_array['obfs_param'] = "mode=ws;security=tls;path=".$server['path'].";host=".$user->getMuMd5();        
-            } else {
-                $return_array['obfs_param'] = "mode=ws;security=none;path=".$server['path'].";host=".$user->getMuMd5();        
-            }
-        } else {
-            $return_array['address'] = $node->server;
-            $return_array['port'] = $user->port;
-            $return_array['protocol'] = $user->protocol;
-            $return_array['protocol_param'] = $user->protocol_param;
-            $return_array['obfs'] = $user->obfs;
-            $return_array['obfs_param'] = $user->obfs_param;
-        }
+        $return_array['address'] = $node->server;
+        $return_array['port'] = $user->port;
         $return_array['passwd'] = $user->passwd;
         $return_array['method'] = $user->method;
         $return_array['remark'] = $node_name;
+        $return_array['protocol'] = $user->protocol;
+        $return_array['protocol_param'] = $user->protocol_param;
+        $return_array['obfs'] = $user->obfs;
+        $return_array['obfs_param'] = $user->obfs_param;
         $return_array['group'] = Config::get('appName');
-        if($mu_port != 0 && Config::get('mergeSub')!='true') {
+        if($mu_port != 0 && !Config::get('mergeSub')) {
             $return_array['group'] .= ' - 单端口';
         }
         return $return_array;
@@ -577,17 +621,11 @@ class URL
 
 	public static function getUserTraffic($user, $is_mu = 0){
         $group_name = Config::get('appName');
-		if(Config::get('mergeSub')!='true' and $is_mu == 1){
+		if(!Config::get('mergeSub') and $is_mu == 1){
 			$group_name .= ' - 单端口';
 		}
 		if(strtotime($user->expire_in)>time()){
-			if($user->transfer_enable==0){
-				$percent='0.00%';
-			}
-			else{
-				$percent=number_format(($user->transfer_enable-$user->u-$user->d)/$user->transfer_enable*100,2).'%';
-			}
-			$ssurl = "www.google.com:1:auth_chain_a:chacha20:tls1.2_ticket_auth:YnJlYWt3YWxs/?obfsparam=&protoparam=&remarks=".Tools::base64_url_encode('剩余流量：'.$percent.' '.$user->unusedTraffic())."&group=".Tools::base64_url_encode($group_name);
+			$ssurl = "www.google.com:1:auth_chain_a:chacha20:tls1.2_ticket_auth:YnJlYWt3YWxs/?obfsparam=&protoparam=&remarks=".Tools::base64_url_encode("剩余流量：".number_format(($user->transfer_enable-($user->u+$user->d))/$user->transfer_enable*100,2)."% ".$user->unusedTraffic())."&group=".Tools::base64_url_encode($group_name);
 		}else{
 			$ssurl = "www.google.com:1:auth_chain_a:chacha20:tls1.2_ticket_auth:YnJlYWt3YWxs/?obfsparam=&protoparam=&remarks=".Tools::base64_url_encode("账户已过期，请续费后使用")."&group=".Tools::base64_url_encode($group_name);
 		}
@@ -596,7 +634,7 @@ class URL
 
     public static function getUserClassExpiration($user, $is_mu = 0){
         $group_name = Config::get('appName');
-		if(Config::get('mergeSub')!='true' and $is_mu == 1){
+		if(!Config::get('mergeSub') and $is_mu == 1){
 			$group_name .= ' - 单端口';
 		}
 		if(strtotime($user->expire_in)>time()){

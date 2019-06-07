@@ -18,8 +18,7 @@ class Auth
             $newResponse = $response->withStatus(302)->withHeader('Location', '/auth/login');
             return $newResponse;
         }
-        $enablePages = array("/user/disable", "/user/backtoadmin", "/user/logout");
-        if ($user->enable == 0 && !in_array($_SERVER["REQUEST_URI"], $enablePages)) {
+        if ($user->enable == 0 && $_SERVER["REQUEST_URI"] != "/user/disable") {
             $newResponse = $response->withStatus(302)->withHeader('Location', '/user/disable');
             return $newResponse;
         }

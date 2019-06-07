@@ -22,15 +22,13 @@
 
 
 									<div class="form-group form-group-label">
-										<label class="floating-label" for="server">节点地址</label>
+										<label class="floating-label" for="server">节点地址（如果填写为域名，“节点IP”会自动设置为解析的IP）</label>
 										<input class="form-control maxwidth-edit" id="server" name="server" type="text" value="{$node->server}">
-										<p class="form-control-guide"><i class="material-icons">info</i>如果填写为域名，“节点IP”会自动设置为解析的IP</p>
 									</div>
 
 									<div class="form-group form-group-label">
-										<label class="floating-label" for="server">节点IP</label>
+										<label class="floating-label" for="server">节点IP(如果“节点地址”填写为域名，则此处的值会被忽视)</label>
 										<input class="form-control maxwidth-edit" id="node_ip" name="node_ip" type="text" value="{$node->node_ip}">
-										<p class="form-control-guide"><i class="material-icons">info</i>如果“节点地址”填写为域名，则此处的值会被忽视</p>
 									</div>
 
 									<div class="form-group form-group-label" hidden="hidden">
@@ -103,8 +101,6 @@
 													<option value="9" {if $node->sort==9}selected{/if}>Shadowsocks 单端口多用户</option>
 													<option value="10" {if $node->sort==10}selected{/if}>Shadowsocks 中转</option>
 													<option value="11" {if $node->sort==11}selected{/if}>V2Ray</option>
-													<option value="12" {if $node->sort==12}selected{/if}>V2Ray 中转</option>
-													<option value="13" {if $node->sort==13}selected{/if}>Shadowsocks V2Ray-Plugin</option>
 												</select>
 											</div>
 									</div>
@@ -115,22 +111,19 @@
 									</div>
 
 									<div class="form-group form-group-label">
-										<label class="floating-label" for="class">节点等级</label>
+										<label class="floating-label" for="class">节点等级（不分级请填0，分级为数字）</label>
 										<input class="form-control maxwidth-edit" id="class" name="class" type="text" value="{$node->node_class}">
-										<p class="form-control-guide"><i class="material-icons">info</i>不分级请填0，分级填写相应数字</p>
 									</div>
 
 									<div class="form-group form-group-label">
-										<label class="floating-label" for="group">节点群组</label>
+										<label class="floating-label" for="group">节点群组（分组为数字，不分组请填0）</label>
 										<input class="form-control maxwidth-edit" id="group" name="group" type="text" value="{$node->node_group}">
-										<p class="form-control-guide"><i class="material-icons">info</i>分组为数字，不分组请填0</p>
 									</div>
 
 
 									<div class="form-group form-group-label">
-										<label class="floating-label" for="node_bandwidth_limit">节点流量上限（GB）</label>
+										<label class="floating-label" for="node_bandwidth_limit">节点流量上限（不使用的话请填0）（GB）</label>
 										<input class="form-control maxwidth-edit" id="node_bandwidth_limit" name="node_bandwidth_limit" type="text" value="{$node->node_bandwidth_limit/1024/1024/1024}">
-										<p class="form-control-guide"><i class="material-icons">info</i>不设上限请填0</p>
 									</div>
 
 									<div class="form-group form-group-label">
@@ -139,9 +132,8 @@
 									</div>
 
 									<div class="form-group form-group-label">
-										<label class="floating-label" for="node_speedlimit">节点限速（Mbps）</label>
+										<label class="floating-label" for="node_speedlimit">节点限速(对于每个用户端口)（Mbps）</label>
 										<input class="form-control maxwidth-edit" id="node_speedlimit" name="node_speedlimit" type="text" value="{$node->node_speedlimit}">
-										<p class="form-control-guide"><i class="material-icons">info</i>不限速填0，对于每个用户端口生效</p>
 									</div>
 								</div>
 							</div>
@@ -237,7 +229,7 @@
                     node_bandwidth_limit: $$getValue('node_bandwidth_limit'),
                     bandwidthlimit_resetday: $$getValue('bandwidthlimit_resetday')
 {/literal},
-                    custom_rss,
+                    custom_rss: custom_rss,
                     mu_only: $$getValue('mu_only')
 {literal}
                 },

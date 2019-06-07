@@ -15,15 +15,13 @@
 						<div class="card-main">
 							<div class="card-inner">
 								<div class="form-group form-group-label">
-									<label class="floating-label" for="prefix">优惠码</label>
+									<label class="floating-label" for="prefix">优惠码(生成随机优惠码不填)</label>
 									<input class="form-control maxwidth-edit" id="prefix" type="text">
-									<p class="form-control-guide"><i class="material-icons">info</i>生成随机优惠码不填</p>
 								</div>
 
 								<div class="form-group form-group-label">
-									<label class="floating-label" for="credit">优惠码额度</label>
+									<label class="floating-label" for="credit">优惠码额度(百分比，九折就填 10 )</label>
 									<input class="form-control maxwidth-edit" id="credit" type="text">
-									<p class="form-control-guide"><i class="material-icons">info</i>百分比，九折就填 10</p>
 								</div>
 
 								<div class="form-group form-group-label">
@@ -32,9 +30,8 @@
 								</div>
 
 								<div class="form-group form-group-label">
-									<label class="floating-label" for="shop">优惠码可用商品ID</label>
+									<label class="floating-label" for="shop">优惠码可用商品ID，不填即为所有商品可用，多个的话用英文半角逗号分割</label>
 									<input class="form-control maxwidth-edit" id="shop" type="text">
-									<p class="form-control-guide"><i class="material-icons">info</i>不填即为所有商品可用，多个的话用英文半角逗号分割</p>
 								</div>
 
 								<div class="form-group form-group-label">
@@ -50,23 +47,25 @@
 									</div>
 								</div>
 
-								<div class="form-group form-group-label">
-									<label for="generate-type">
-										<label class="floating-label" for="sort">选择生成方式</label>
-										<select id="generate-type" class="form-control maxwidth-edit">
-											<option value="1">指定字符</option>
-											<option value="2">随机字符</option>
-											<option value="3">指定字符+随机字符</option>
-										</select>
-									</label>
-								</div>
 
                                 <div class="form-group">
 									<div class="row">
 										<div class="col-md-10 col-md-push-1">
-                                            <button id="coupon" type="submit" class="btn btn-block btn-brand waves-attach waves-light">生成优惠码</button>
+                                            <button id="coupon" type="submit" class="btn btn-block btn-brand waves-attach waves-light">生成指定字符的优惠码</button>
 										</div>
 									</div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-10 col-md-push-1">
+                                            <button id="coupon-random" type="submit" class="btn btn-block waves-attach waves-light">生成仅包含随机字符的优惠码</button>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-10 col-md-push-1">
+                                            <button id="coupon-prefix-random" type="submit" class="btn btn-block waves-attach waves-light">生成指定前缀+随机字符的优惠码</button>
+                                        </div>
+                                    </div>
 								</div>
 
 							</div>
@@ -103,39 +102,54 @@
 
 
 <script>
+let randomWord = () => Math.random().toString(36).substr(2);
 
 {include file='table/js_1.tpl'}
 
+let submitCoupon = code => {
+    $.ajax({
+        type: "POST",
+        url: "/admin/coupon",
+        dataType: "json",
+        data: {
+            // prefix: $("#prefix").val(),
+            prefix: code,
+            credit: $$getValue('credit'),
+            shop: $$getValue('shop'),
+            onetime: $$getValue('count'),
+            expire: $$getValue('expire'),
+        },
+        success: data => {
+            if (data.ret) {
+                $("#result").modal();
+                $$.getElementById('msg').innerHTML = data.msg;
+                window.setTimeout("location.href='/admin/coupon'", {$config['jump_delay']});
+            }
+            // window.location.reload();
+        },
+        error: jqXHR => {
+            alert(`发生错误：${ldelim}jqXHR.status{rdelim}`);
+        }
+    })
+}
 
 window.addEventListener('load', () => {
 		{include file='table/js_2.tpl'}
 
         $$.getElementById('coupon').addEventListener('click', () => {
             let couponCode = $$.getElementById('prefix').value;
-            
-			$.ajax({
-				type: "POST",
-		        url: "/admin/coupon",
-			    dataType: "json",
-				data: {
-					prefix: $$getValue('prefix'),
-				    credit: $$getValue('credit'),
-				    shop: $$getValue('shop'),
-				    onetime: $$getValue('count'),
-					expire: $$getValue('expire'),
-					generate_type: $$getValue('generate-type'),
-			    },
-				success: data => {
-					$("#result").modal();
-		            $("#msg").html(data.msg);
-					if (data.ret) {
-				        window.setTimeout("location.href='/admin/coupon'", {$config['jump_delay']});
-				    }
-				},
-			    error: jqXHR => {
-				    alert(`发生错误：${ldelim}jqXHR.status{rdelim}`);
-				}
-			})
+            submitCoupon(couponCode);
         })
+
+        $$.getElementById('coupon-random').addEventListener('click', () => {
+            let couponCode = randomWord();
+            submitCoupon(couponCode);
+        })
+
+        $$.getElementById('coupon-random').addEventListener('click', () => {
+            let couponCode = $$.getElementById('prefix').value.concat(randomWord());
+            submitCoupon(couponCode);
+        })
+
 })
 </script>

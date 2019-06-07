@@ -31,13 +31,14 @@ class AuthController extends BaseController
     {
         $GtSdk = null;
         $recaptcha_sitekey = null;
-        if (Config::get('enable_login_captcha') == 'true') {
-            switch (Config::get('captcha_provider')) {
+        if (Config::get('enable_login_captcha') == 'true'){
+            switch(Config::get('captcha_provider'))
+            {
                 case 'recaptcha':
                     $recaptcha_sitekey = Config::get('recaptcha_sitekey');
                     break;
                 case 'geetest':
-                    $uid = time() . rand(1, 10000);
+                    $uid = time().rand(1, 10000) ;
                     $GtSdk = Geetest::get($uid);
                     break;
             }
@@ -63,46 +64,25 @@ class AuthController extends BaseController
             ->display('auth/login.tpl');
     }
 
-    public function getCaptcha($request, $response, $args)
-    {
-        $GtSdk = null;
-        $recaptcha_sitekey = null;
-        if (Config::get('captcha_provider') != '') {
-            switch (Config::get('captcha_provider')) {
-                case 'recaptcha':
-                    $recaptcha_sitekey = Config::get('recaptcha_sitekey');
-                    $res['recaptchaKey'] = $recaptcha_sitekey;
-                    break;
-                case 'geetest':
-                    $uid = time() . rand(1, 10000);
-                    $GtSdk = Geetest::get($uid);
-                    $res['GtSdk'] = $GtSdk;
-                    break;
-            }
-        }
-
-        $res['respon'] = 1;
-        return $response->getBody()->write(json_encode($res));
-    }
-
     public function loginHandle($request, $response, $args)
     {
         // $data = $request->post('sdf');
         $email = $request->getParam('email');
-        $email = trim($email);
+		$email = trim($email);
         $email = strtolower($email);
         $passwd = $request->getParam('passwd');
         $code = $request->getParam('code');
         $rememberMe = $request->getParam('remember_me');
 
         if (Config::get('enable_login_captcha') == 'true') {
-            switch (Config::get('captcha_provider')) {
+            switch(Config::get('captcha_provider'))
+            {
                 case 'recaptcha':
                     $recaptcha = $request->getParam('recaptcha');
-                    if ($recaptcha == '') {
+                    if ($recaptcha == ''){
                         $ret = false;
-                    } else {
-                        $json = file_get_contents("https://recaptcha.net/recaptcha/api/siteverify?secret=" . Config::get('recaptcha_secret') . "&response=" . $recaptcha);
+                    }else{
+                        $json = file_get_contents("https://recaptcha.net/recaptcha/api/siteverify?secret=".Config::get('recaptcha_secret')."&response=".$recaptcha);
                         $ret = json_decode($json)->success;
                     }
                     break;
@@ -122,28 +102,28 @@ class AuthController extends BaseController
 
         if ($user == null) {
             $rs['ret'] = 0;
-            $rs['msg'] = "邮箱不存在";
+            $rs['msg'] = "邮箱或者密码错误";
             return $response->getBody()->write(json_encode($rs));
         }
 
         if (!Hash::checkPassword($user->pass, $passwd)) {
             $rs['ret'] = 0;
-            $rs['msg'] = "邮箱或者密码错误";
+            $rs['msg'] = "邮箱或者密码错误.";
 
 
-            $loginIP = new LoginIp();
-            $loginIP->ip = $_SERVER["REMOTE_ADDR"];
-            $loginIP->userid = $user->id;
-            $loginIP->datetime = time();
-            $loginIP->type = 1;
-            $loginIP->save();
+            $loginip = new LoginIp();
+            $loginip->ip = $_SERVER["REMOTE_ADDR"];
+            $loginip->userid = $user->id;
+            $loginip->datetime = time();
+            $loginip->type = 1;
+            $loginip->save();
 
             return $response->getBody()->write(json_encode($rs));
         }
-
+        // @todo
         $time = 3600 * 24;
         if ($rememberMe) {
-            $time = 3600 * 24 * Config::get('rememberMeDuration') ?: 3600 * 24 * 7;
+            $time = 3600 * 24 * 7;
         }
 
         if ($user->ga_enable == 1) {
@@ -161,12 +141,12 @@ class AuthController extends BaseController
         $rs['ret'] = 1;
         $rs['msg'] = "登录成功";
 
-        $loginIP = new LoginIp();
-        $loginIP->ip = $_SERVER["REMOTE_ADDR"];
-        $loginIP->userid = $user->id;
-        $loginIP->datetime = time();
-        $loginIP->type = 0;
-        $loginIP->save();
+        $loginip = new LoginIp();
+        $loginip->ip = $_SERVER["REMOTE_ADDR"];
+        $loginip->userid = $user->id;
+        $loginip->datetime = time();
+        $loginip->type = 0;
+        $loginip->save();
 
         return $response->getBody()->write(json_encode($rs));
     }
@@ -220,13 +200,14 @@ class AuthController extends BaseController
 
         $GtSdk = null;
         $recaptcha_sitekey = null;
-        if (Config::get('enable_reg_captcha') == 'true') {
-            switch (Config::get('captcha_provider')) {
+        if (Config::get('enable_reg_captcha') == 'true'){
+            switch(Config::get('captcha_provider'))
+            {
                 case 'recaptcha':
                     $recaptcha_sitekey = Config::get('recaptcha_sitekey');
                     break;
                 case 'geetest':
-                    $uid = time() . rand(1, 10000);
+                    $uid = time().rand(1, 10000) ;
                     $GtSdk = Geetest::get($uid);
                     break;
             }
@@ -246,7 +227,7 @@ class AuthController extends BaseController
     {
         if (Config::get('enable_email_verify') == 'true') {
             $email = $request->getParam('email');
-            $email = trim($email);
+			$email = trim($email);
 
             if ($email == "") {
                 $res['ret'] = 0;
@@ -314,35 +295,36 @@ class AuthController extends BaseController
 
     public function registerHandle($request, $response)
     {
-        if (Config::get('register_mode') == 'close') {
-            $res['ret'] = 0;
+		if(Config::get('register_mode')=='close'){
+			$res['ret'] = 0;
             $res['msg'] = "未开放注册。";
             return $response->getBody()->write(json_encode($res));
-        }
+		}
         $name = $request->getParam('name');
         $email = $request->getParam('email');
-        $email = trim($email);
+		$email = trim($email);
         $email = strtolower($email);
         $passwd = $request->getParam('passwd');
         $repasswd = $request->getParam('repasswd');
         $code = $request->getParam('code');
-        $code = trim($code);
+		$code = trim($code);
         $imtype = $request->getParam('imtype');
         $emailcode = $request->getParam('emailcode');
-        $emailcode = trim($emailcode);
+		$emailcode = trim($emailcode);
         $wechat = $request->getParam('wechat');
-        $wechat = trim($wechat);
+		$wechat = trim($wechat);
         // check code
 
 
         if (Config::get('enable_reg_captcha') == 'true') {
-            switch (Config::get('captcha_provider')) {
+            switch(Config::get('captcha_provider'))
+            {
                 case 'recaptcha':
                     $recaptcha = $request->getParam('recaptcha');
-                    if ($recaptcha == '') {
+                    if ($recaptcha == ''){
                         $ret = false;
-                    } else {
-                        $json = file_get_contents("https://recaptcha.net/recaptcha/api/siteverify?secret=" . Config::get('recaptcha_secret') . "&response=" . $recaptcha);
+                    }else{
+                        $json = file_get_contents("https://recaptcha.net/recaptcha/api/siteverify?secret=".Config::get('recaptcha_secret')."&response=".$recaptcha);
                         $ret = json_decode($json)->success;
                     }
                     break;
@@ -382,6 +364,7 @@ class AuthController extends BaseController
                 return $response->getBody()->write(json_encode($res));
             }
         }
+
 
 
         // check email format
@@ -489,9 +472,9 @@ class AuthController extends BaseController
         $user->plan = 'A';
         $user->theme = Config::get('theme');
 
-        $groups = explode(",", Config::get('ramdom_group'));
+        $groups=explode(",", Config::get('ramdom_group'));
 
-        $user->node_group = $groups[array_rand($groups)];
+        $user->node_group=$groups[array_rand($groups)];
 
         $ga = new GA();
         $secret = $ga->createSecret();
@@ -521,13 +504,8 @@ class AuthController extends BaseController
 
     public function qrcode_check($request, $response, $args)
     {
-        $token = $request->getParam('token');
-        $number = $request->getParam('number');
-        $user = Auth::getUser();
-        if ($user->isLogin) {
-            $res['ret'] = 0;
-            return $response->getBody()->write(json_encode($res));
-        }
+        $token = $request->getQueryParams()["token"];
+        $number = $request->getQueryParams()["number"];
 
         if (Config::get('enable_telegram') == 'true') {
             $ret = TelegramSessionManager::check_login_session($token, $number);
@@ -546,7 +524,7 @@ class AuthController extends BaseController
             if ($this->telegram_oauth_check($auth_data) === true) { // Looks good, proceed.
                 $telegram_id = $auth_data['id'];
                 $user = User::query()->where('telegram_id', $telegram_id)->firstOrFail(); // Welcome Back :)
-                if ($user == null) {
+                if($user == null){
                     return $this->view()->assign('title', '您需要先进行邮箱注册后绑定Telegram才能使用授权登录')->assign('message', '很抱歉带来的不便，请重新试试')->assign('redirect', '/auth/login')->display('telegram_error.tpl');
                 }
                 Auth::login($user->id, 3600);

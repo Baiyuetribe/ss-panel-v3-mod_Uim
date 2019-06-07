@@ -27,7 +27,6 @@ class Cookie extends Base
     public function getUser()
     {
         $uid = Utils\Cookie::get('uid');
-        $email = Utils\Cookie::get('email');
         $key = Utils\Cookie::get('key');
         $ip = Utils\Cookie::get('ip');
         
@@ -52,7 +51,7 @@ class Cookie extends Base
             return $user;
         }
 
-        $user = User::where('email',$email)->first();
+        $user = User::find($uid);
         if ($user == null) {
             $user = new User();
             $user->isLogin = false;
