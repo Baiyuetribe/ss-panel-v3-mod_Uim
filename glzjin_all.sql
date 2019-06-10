@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.62, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.19, for Linux (x86_64)
 --
 -- Host: localhost    Database: sspanel
 -- ------------------------------------------------------
--- Server version	5.5.62-log
+-- Server version	5.7.19-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -322,7 +322,7 @@ CREATE TABLE `link` (
   `geo` int(11) DEFAULT NULL,
   `method` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -348,7 +348,7 @@ CREATE TABLE `login_ip` (
   `datetime` bigint(20) NOT NULL,
   `type` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -357,6 +357,7 @@ CREATE TABLE `login_ip` (
 
 LOCK TABLES `login_ip` WRITE;
 /*!40000 ALTER TABLE `login_ip` DISABLE KEYS */;
+INSERT INTO `login_ip` VALUES (2,2,'107.148.255.107',1560181557,1),(3,2,'107.148.255.107',1560181574,1),(4,2,'107.148.255.107',1560181591,1),(5,2,'107.148.255.107',1560181624,1),(6,2,'107.148.255.107',1560181637,1),(7,2,'107.148.255.107',1560181655,1),(8,2,'107.148.255.107',1560181776,0);
 /*!40000 ALTER TABLE `login_ip` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -687,7 +688,7 @@ CREATE TABLE `telegram_session` (
   `session_content` text NOT NULL,
   `datetime` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -696,6 +697,7 @@ CREATE TABLE `telegram_session` (
 
 LOCK TABLES `telegram_session` WRITE;
 /*!40000 ALTER TABLE `telegram_session` DISABLE KEYS */;
+INSERT INTO `telegram_session` VALUES (1,2,0,'dNeodjPGPyUqSRgo',1560181805);
 /*!40000 ALTER TABLE `telegram_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -826,7 +828,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (2,'admin','admin','255c1a659b634eaf716bc73cdab8bf6fd9cbdffd84b0d210109c4db32a7b236a','NhaS8C',0,0,0,'A',1073741824,1025,1,1,1,0,0,0,'2019-06-07 10:28:29',10,0.00,0,0,'rc4-md5',0,'127.0.0.1',0.00,0,1,1,'',0,0,0,'1989-06-04 00:05:00','2029-06-04 10:28:29','material','NEI7ASEYBDPM7ORP',0,NULL,NULL,0,0,0.00,'origin',NULL,'plain',NULL,NULL,NULL,NULL,0,0,NULL);
+INSERT INTO `user` VALUES (2,'admin','admin','ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f','NhaS8C',0,0,0,'A',1073741824,1025,1,1,1,0,0,0,'2019-06-07 10:28:29',10,0.00,0,0,'rc4-md5',0,'127.0.0.1',0.00,0,1,1,'',0,0,0,'1989-06-04 00:05:00','2029-06-04 10:28:29','material','NEI7ASEYBDPM7ORP',0,NULL,NULL,0,0,0.00,'origin',NULL,'plain',NULL,NULL,NULL,NULL,0,0,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -894,4 +896,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-07 10:29:00
+-- Dump completed on 2019-06-10 23:51:26
