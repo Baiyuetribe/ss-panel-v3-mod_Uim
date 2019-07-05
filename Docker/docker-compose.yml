@@ -1,0 +1,41 @@
+version: '3.1'
+services:
+    sspanel:
+        image: "baiyuetribe/sspanel:master"
+        restart: always
+        container_name: sspanel         
+        networks:
+            - frontend
+            - backend
+        ports:
+          - 666:80 
+        volumes:
+          - /opt/sspanel/code:/sspanel          
+    mysql:
+        image: "mysql:5.6"
+        restart: always
+        environment:
+          TZ: 'Asia/Shanghai'
+          MYSQL_DATABASE: sspanel
+          MYSQL_ROOT_PASSWORD: sspanel
+        volumes:
+          - /opt/sspanel/mysql:/var/lib/mysql
+          - /opt/sspanel/code/sql/glzjin_all.sql:/docker-entrypoint-initdb.d/sspanel.sql
+        networks:
+            - backend
+        depends_on:
+          - kodexplorer            
+    kodexplorer:
+        image: baiyuetribe/kodexplorer
+        restart: always
+        ports:
+          - 999:80
+        volumes:
+          - /opt/sspanel:/code
+        networks:
+          - backend 
+        depends_on:
+          - sspanel                
+networks:
+    frontend:
+    backend:
