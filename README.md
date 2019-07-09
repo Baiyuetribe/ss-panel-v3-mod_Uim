@@ -2,7 +2,7 @@
 
 特点：
 
-- 镜像模式类似wordpress、typoehco\nextcloud等，抛弃臃肿的LNMP，镜像极简。
+- 镜像模式类似wordpress、typoehco、nextcloud等，抛弃臃肿的LNMP，镜像极简。
 - 更轻量、更快、也更安全。
 - 完整镜像体积仅仅275MB，源码可挂载本地
 
@@ -17,7 +17,7 @@
 - 开发版每月同步dev分支
 
 ```
-bash 。。。待制作
+bash <(curl -L -s https://raw.githubusercontent.com/Baiyuetribe/ss-panel-v3-mod_Uim/dev/sspanel.sh)
 ```
 
 脚本结束后会提示如下内容：
@@ -28,6 +28,8 @@ bash 。。。待制作
 - 默认数据库路径：`/opt/sspanel/mysql`
 
 修改宿主机源码，可实时同步容器内文件。
+
+![]（https://img.baiyue.one/upload/2019/07/5d21bb61ae931.png）
 
 ### 手动部署
 
