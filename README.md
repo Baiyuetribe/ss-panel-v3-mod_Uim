@@ -29,7 +29,7 @@ bash <(curl -L -s https://raw.githubusercontent.com/Baiyuetribe/ss-panel-v3-mod_
 
 修改宿主机源码，可实时同步容器内文件。
 
-![]（https://img.baiyue.one/upload/2019/07/5d21bb61ae931.png）
+![](https://img.baiyue.one/upload/2019/07/5d21bb61ae931.png）
 
 ### 手动部署
 
