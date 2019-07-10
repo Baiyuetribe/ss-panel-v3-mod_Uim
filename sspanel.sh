@@ -93,7 +93,7 @@ notice2(){
     green "=================================================="
     green "搭建成功，现在您可以直接访问了"
     green "---------------------------"
-    green " sspanel地址：http://ip:999   源码路径：/code/code"      
+    green " sspanel地址：http://ip:666   源码路径：/code/code"      
     green " 文件管理器地址：http://ip:999   源码路径：/code/code"  
     green " phpadmin地址：http://ip:8080"
     green "---------------------------"
