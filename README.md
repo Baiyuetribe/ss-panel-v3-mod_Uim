@@ -1,10 +1,23 @@
-## SSPanel DOCKER版
+## SSPanel DOCKER版（项目来源：Anankke/SSPanel-Uim）
+![logo_img_sc.png](https://i.loli.net/2019/07/13/5d2984bc1f5e481107.png)
+
+
+| SSPanel版本                                                  | 镜像                                                         | 状态                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 稳定版（master分支）[![](https://images.microbadger.com/badges/version/baiyuetribe/sspanel:stable.svg)](https://microbadger.com/images/baiyuetribe/sspanel:stable "Get your own version badge on microbadger.com") | [![](https://images.microbadger.com/badges/image/baiyuetribe/sspanel:stable.svg)](https://microbadger.com/images/baiyuetribe/sspanel:stable "Get your own image badge on microbadger.com") | ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/baiyuetribe/sspanel.svg?style=flat-square) |
+| 开发版（dev分支）[![](https://images.microbadger.com/badges/version/baiyuetribe/sspanel:dev.svg)](https://microbadger.com/images/baiyuetribe/sspanel:dev "Get your own version badge on microbadger.com") | [![](https://images.microbadger.com/badges/image/baiyuetribe/sspanel:dev.svg)](https://microbadger.com/images/baiyuetribe/sspanel:dev "Get your own image badge on microbadger.com") | ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/baiyuetribe/sspanel.svg?style=flat-square) |
+| 基础镜像（运行环境）[![](https://images.microbadger.com/badges/version/baiyuetribe/sspanel:alpine.svg)](https://microbadger.com/images/baiyuetribe/sspanel:alpine "Get your own version badge on microbadger.com") | [![](https://images.microbadger.com/badges/image/baiyuetribe/sspanel:alpine.svg)](https://microbadger.com/images/baiyuetribe/sspanel:alpine "Get your own image badge on microbadger.com") | ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/baiyuetribe/sspanel.svg?style=flat-square) |
 
 特点：
 
 - 镜像模式类似wordpress、typoehco、nextcloud等，抛弃臃肿的LNMP，镜像极简。
 - 更轻量、更快、也更安全。
 - 完整镜像体积仅仅275MB，源码可挂载本地
+
+特殊优势：
+
+- 前端和后端节点可共存于一台服务器
+- 去中心化，搭配swarm和k8s可部署容器集群
 
 ## 部署方法
 
@@ -84,6 +97,9 @@ exit		#退出
 
 脚本作者：azure 更多优质web资源，请参考：[佰阅部落](https://baiyue.one)
 
+## 最终效果：
+
+![](https://i.loli.net/2019/06/14/5d03a311b46dd70196.png)
 
 
 
