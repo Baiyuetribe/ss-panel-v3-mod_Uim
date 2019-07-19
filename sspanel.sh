@@ -102,7 +102,7 @@ notice2(){
     white "数据库存储路径：/opt/sspanel/mysql"
     green "=================================================="
     white "Dcocker by 佰阅部落  https://baiyue.one"
-    white "Docker版问题反馈地址：https://github.com/Baiyuetribe/sspanel/pulls"
+    white "Docker版问题反馈地址：https://baiyue.one/archives/503.html"
 }
 
 # 开始安装sspanel
