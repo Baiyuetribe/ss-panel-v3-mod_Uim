@@ -21,10 +21,11 @@ services:
         volumes:
           - /opt/sspanel/mysql:/var/lib/mysql
           - /opt/sspanel/code/sql/glzjin_all.sql:/docker-entrypoint-initdb.d/sspanel.sql
+        command: ['mysqld', '--character-set-server=utf8']          
         networks:
             - backend
         depends_on:
-          - kodexplorer            
+          - kodexplorer              
     kodexplorer:
         image: baiyuetribe/kodexplorer
         restart: always
