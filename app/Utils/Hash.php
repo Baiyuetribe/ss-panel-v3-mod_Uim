@@ -4,48 +4,56 @@ namespace App\Utils;
 
 use App\Services\Config;
 
+
 class Hash
 {
-    public static function passwordHash($str)
+    public static function passwordHash($pass)
     {
         $method = Config::get('pwdMethod');
         switch ($method) {
             case 'md5':
-                return self::md5WithSalt($str);
+                return self::md5WithSalt($pass);
                 break;
             case 'sha256':
-                return self::sha256WithSalt($str);
+                return self::sha256WithSalt($pass);
                 break;
+            case 'bcrypt':
+                return password_hash($pass, PASSWORD_BCRYPT);
+                break;
+            case 'argon2i':
+                return password_hash($pass, PASSWORD_ARGON2I);
+                break;
+            case 'argon2id':
+                return password_hash($pass, PASSWORD_ARGON2ID);
+                break;
+
             default:
-                return self::md5WithSalt($str);
+                return self::md5WithSalt($pass);
         }
-        return $str;
     }
 
-    public static function cookieHash($str)
+    public static function cookieHash($passHash, $expire_in)
     {
-        return  substr(hash('sha256', $str.Config::get('key')), 5, 45);
+        return substr(hash('sha256', $passHash . Config::get('key') . $expire_in), 5, 45);
     }
 
     public static function md5WithSalt($pwd)
     {
         $salt = Config::get('salt');
-        return md5($pwd.$salt);
+        return md5($pwd . $salt);
     }
 
     public static function sha256WithSalt($pwd)
     {
         $salt = Config::get('salt');
-        return hash('sha256', $pwd.$salt);
+        return hash('sha256', $pwd . $salt);
     }
 
-    // @TODO
     public static function checkPassword($hashedPassword, $password)
     {
-        $method = Config::get('pwdMethod');
-        if ($hashedPassword == self::passwordHash($password)) {
-            return true;
+        if (in_array(Config::get('pwdMethod'), ['bcrypt', 'argon2i', 'argon2id'])) {
+            return password_verify($password, $hashedPassword);
         }
-        return false;
+        return ($hashedPassword == self::passwordHash($password));
     }
 }
