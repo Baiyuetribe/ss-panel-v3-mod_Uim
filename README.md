@@ -1,6 +1,10 @@
 ## SSPanel DOCKER版（项目来源：Anankke/SSPanel-Uim）
-![logo_img_sc.png](https://i.loli.net/2019/07/13/5d2984bc1f5e481107.png)
 
+<p align="center">
+  <a href="https://baiyue.one/">
+    <img src="https://i.loli.net/2019/07/13/5d2984bc1f5e481107.png" alt="baiyue logo" width="auto" height="90">
+  </a>
+</p>
 
 | SSPanel版本                                                  | 镜像                                                         | 状态                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
