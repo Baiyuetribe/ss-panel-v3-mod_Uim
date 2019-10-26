@@ -1,131 +1,170 @@
-## SSPanel DOCKER版（项目来源：Anankke/SSPanel-Uim）
+<img src="https://cdn.jsdelivr.net/npm/skx@0.1.3/img/uim-logo-round.png" alt="logo" width="130" height="130" align="left" />
 
-<p align="center">
-  <a href="https://baiyue.one/">
-    <img src="https://i.loli.net/2019/07/13/5d2984bc1f5e481107.png" alt="baiyue logo" width="auto" height="90">
-  </a>
-</p>
+<h1>SSPanel UIM</h1>
 
-| SSPanel版本                                                  | 镜像                                                         | 状态                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 稳定版（master分支）[![](https://images.microbadger.com/badges/version/baiyuetribe/sspanel:stable.svg)](https://microbadger.com/images/baiyuetribe/sspanel:stable "Get your own version badge on microbadger.com") | [![](https://images.microbadger.com/badges/image/baiyuetribe/sspanel:stable.svg)](https://microbadger.com/images/baiyuetribe/sspanel:stable "Get your own image badge on microbadger.com") | ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/baiyuetribe/sspanel.svg?style=flat-square) |
-| 开发版（dev分支）[![](https://images.microbadger.com/badges/version/baiyuetribe/sspanel:dev.svg)](https://microbadger.com/images/baiyuetribe/sspanel:dev "Get your own version badge on microbadger.com") | [![](https://images.microbadger.com/badges/image/baiyuetribe/sspanel:dev.svg)](https://microbadger.com/images/baiyuetribe/sspanel:dev "Get your own image badge on microbadger.com") | ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/baiyuetribe/sspanel.svg?style=flat-square) |
-| 基础镜像（运行环境）[![](https://images.microbadger.com/badges/version/baiyuetribe/sspanel:alpine.svg)](https://microbadger.com/images/baiyuetribe/sspanel:alpine "Get your own version badge on microbadger.com") | [![](https://images.microbadger.com/badges/image/baiyuetribe/sspanel:alpine.svg)](https://microbadger.com/images/baiyuetribe/sspanel:alpine "Get your own image badge on microbadger.com") | ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/baiyuetribe/sspanel.svg?style=flat-square) |
+> Across the Great Wall we can reach every corner in the world
 
-特点：
+<br/>
 
-- 镜像模式类似wordpress、typoehco、nextcloud等，抛弃臃肿的LNMP，镜像极简。
-- 更轻量、更快、也更安全。
-- 完整镜像体积仅仅257MB，源码可挂载本地
+[![License](https://img.shields.io/github/license/Anankke/SSPanel-Uim?style=flat-square)](https://github.com/Anankke/SSPanel-Uim/blob/dev/LICENSE)
+[![Travis Build Status](https://img.shields.io/travis/Anankke/SSPanel-UIM/master.svg?style=flat-square)](https://travis-ci.org/Anankke/SSPanel-Uim)
+![GitHub repo size](https://img.shields.io/github/repo-size/anankke/sspanel-uim?style=flat-square&color=328657)
+[![Telegram Channel](https://img.shields.io/badge/news-t.me%2Fsspanel_uim-0d86d7?style=flat-square)](https://t.me/sspanel_uim)
+[![Telegram Chat](https://img.shields.io/badge/chat-t.me%2Fssunion-0d86d7?style=flat-square)](https://t.me/ssunion)
 
-特殊优势：
+[演示站点](https://sspanel.host) | [使用文档](https://wiki.sspanel.host) | [更新日志](https://github.com/Anankke/SSPanel-Uim/releases) | [Telegram 频道](https://t.me/sspanel_uim) | [Telegram 水群](https://t.me/ssunion)
 
-- 前端和后端节点可共存于一台服务器
-- 去中心化，搭配swarm和k8s可部署容器集群
+## 简介
 
-## 部署方法
+SSPanel UIM 是一款专为 Shadowsocks / ShadowsocksR / V2Ray 设计的多用户管理面板，基于 ss-panel-v3-mod 开发。
 
-> 博客文章地址：[在 Debian 9、Centos7、Ubuntu 搭建 SSPanel 魔改版【Docker版一键脚本】](https://baiyue.one/archives/503.html)
+## 特性
 
-### 方法1：一键脚本（推荐）
+- 集成超过 8 种支付系统
+- 重构面板首页、节点列表、商品列表；新增 SPA（Single Page Apps）版 UI
+- 商品增加同时连接设备数，用户限速属性
+- 新用户注册现金奖励、用户常规端口切换与指定
+- 公共库文件加载使用 jsDelivr
+- 支持 V2Ray
+- 巨量性能优化
+- 更多新功能写不下了
 
-集成docker环境和docker-compose环境检测及安装，适配Centos、Debian、Ubuntu等系统。
-提供两种版本：
+## 安装
 
-- 稳定版每月同步master分支
-- 开发版每月同步dev分支
+SSPanel UIM 的需要以下程序才能正常的安装和运行：
 
-```
-bash <(curl -L -s https://raw.githubusercontent.com/Baiyuetribe/ss-panel-v3-mod_Uim/dev/sspanel.sh)
-```
+- Git
+- MySQL
+- PHP 7.2+
+- Composer
 
-脚本结束后会提示如下内容：
+SSPanel UIM 支持安装在 LNMP、宝塔面板、Plesk 面板、oneinstack 等集成环境中。安装教程请参阅 [文档](https://wiki.sspanel.host)。
 
-- sspanel主程序：http://ip:666
-- kodexplore文件管理器：http://ip:999
-- 默认源码路径：`/opt/sspanel/code`
-- 默认数据库路径：`/opt/sspanel/mysql`
+## 演示
 
-修改宿主机源码，可实时同步容器内文件。
-
-![](https://img.baiyue.one/upload/2019/07/5d21bb61ae931.png)
-
-### 方法2：手动部署
-
-稳定版（master分支）：
+[演示站](https://sspanel.host) 每天更新 `dev` 分支最新源码。
 
 ```
-wget https://raw.githubusercontent.com/Baiyuetribe/ss-panel-v3-mod_Uim/dev/Docker/master/docker-compose.yml
-docker-compose up -d
+账号：admin
+密码：admin
+mukey ShirakamiFubuki
 ```
 
-开发版（dev分支）：
+## 文档
 
-```
-wget https://raw.githubusercontent.com/Baiyuetribe/ss-panel-v3-mod_Uim/dev/Docker/docker-compose.yml
-docker-compose up -d
-```
+> 我们安装，我们更新，我们开发
 
-部署完成后，主要内容如下：
+[SSPanel UIM 的文档](https://wiki.sspanel.host)，在这里你可以找到大部分问题的解答。
 
-- sspanel主程序：http://ip:666
-- kodexplore文件管理器：http://ip:999
-- 默认源码路径：`/opt/sspanel/code`
-- 默认数据库路径：`/opt/sspanel/mysql`
+## 贡献
 
-之后执行剩下的相关命令：
+[提出新想法 & 提交 Bug](https://github.com/Anankke/SSPanel-Uim/issues/new) | [改善文档 & 投稿](https://github.com/sspanel-uim/Wiki) | [Fork & Pull Request](https://github.com/Anankke/SSPanel-Uim/fork)
 
-```
-docker exec -it sspanel sh		#进入sspanel容器
-php xcat createAdmin		#创建管理员账户
-php xcat syncusers		#同步用户
-php xcat initQQWry		#下载ip解析库
-php xcat resetTraffic		#重置流量
-php xcat initdownload		#下载客户端安装包
-exit		#退出
-```
+SSPanel UIM 欢迎各种贡献，包括但不限于改进，新功能，文档和代码改进，问题和错误报告。
 
-执行 `crontab -e` 命令, 添加以下四条（定时任务配置）：
+## 协议
 
-```
-30 22 * * * docker exec -t sspanel php xcat sendDiaryMail
-0 0 * * * docker exec -t sspanel php -n xcat dailyjob
-*/1 * * * * docker exec -t sspanel php xcat checkjob
-*/1 * * * * docker exec -t sspanel php xcat syncnode
-```
+SSPanel UIM 使用 MIT License 开源、不提供任何担保。使用 SSPanel UIM 即表明，您知情并同意：
 
-## 备注：
-
-稳定版与开发版不可共存。
-
-- 卸载命令：`docker-compose down`
-- 删除本地缓存源码：`rm -rf /opt/sspanel`
-
-脚本作者：azure 更多优质web资源，请参考：[佰阅部落](https://baiyue.one)
-
-## 最终效果：
-
-![](https://i.loli.net/2019/06/14/5d03a311b46dd70196.png)
-
-![Snipaste_2019-07-19_16-44-54.png](https://i.loli.net/2019/07/19/5d3183487ea1628740.png)
-
-![Snipaste_2019-07-19_17-17-28.png](https://i.loli.net/2019/07/19/5d318ac1f1d3790132.png)
-
-## 维护日志
-
-- 2019.07.19 修复数据库问题导致商品名称显示“???”字符问题
-- 2019.06.14 受`yangxuan8282`启发，使用alpine基础镜像重构镜像，体积更小、加入源码数据持久化、宿主机现在可以正常编辑源码
-- 2019.04 使用LNMP编写镜像，可实现无需宝塔快速部署sspanel面板（与宝塔兼容）。
+- 您在使用 SSPanel UIM 时，必须保留 Staff 页面（该页面包含了 MIT License）和页脚的 Staff 入口
+- SSPanel UIM 不会对您的任何损失负责，包括但不限于服务中断、Kernel Panic、机器无法开机或正常使用、数据丢失或硬件损坏、原子弹爆炸、第三次世界大战、SCP 基金会无法阻止 SCP-3125 引发的全球 MK 级现实重构等
 
 
-## 问题及建议渠道：
+## 鸣谢
 
-可在GitHub issue区提问或者到博客文章底部留言评论。
+### [HKServerSolution](https://www.hkserversolution.com/cart.php)
 
-## 免责声明
+Demo 演示站服务器赞助。
 
-本程序由 MIT License 授权。**不提供任何担保**。使用本程序即表明，您知情并同意：程序开发者不对此程序导致的任何服务中断、数据损失或任何少见未列出的事故负责。
+### [贡献者](https://github.com/Anankke/SSPanel-Uim/graphs/contributors)
 
-## 更多优质web资源
+SSPanel UIM 离不开所有 [贡献代码](https://github.com/Anankke/SSPanel-Uim/graphs/contributors) 和提交 Issue 的人。
 
-[佰阅部落]（https://baiyue.one）---- 专注分享优质开源项目
+<details>
+<summary>查看贡献者</summary>
+
+#### [Anankke](https://github.com/Anankke)
+
+- 面板现 **维护者**
+
+#### [galaxychuck](https://github.com/galaxychuck)
+
+- 面板 **原作者**
+
+##### [dumplin](https://github.com/dumplin233)
+
+- 码支付对接 + 码支付当面付二合一
+- 为面板加入 AFF 链接功能
+- 商品增加限速和限制 ip 属性
+- 多端口订阅
+- 解决用户列表加载缓慢历史遗留问题
+
+##### [RinSAMA](https://github.com/mxihan)
+
+- 整理分类 config.php
+- 美观性调整
+- 客服系统优化
+
+##### [miku](https://github.com/xcxnig)
+
+- 美观和性能优化
+
+##### [Tony Zou](https://github.com/ZJY2003)
+
+- 为公告增加群发邮件功能
+- 节点负载情况显示&用户账户过期在首页弹窗提醒
+- 增加返利列表
+
+[**Indexyz**](https://github.com/Indexyz)
+
+- 为面板增加 v2Ray 功能
+
+[**NeverBehave**](https://github.com/NeverBehave)
+
+- 添加 Telegram OAuth
+
+[**CGDF**](https://github.com/CGDF-GitHub)
+
+- xcat 一键 update
+- 适配 SSD
+- 用户列表分页加载
+
+[**CHEN**](https://github.com/ChenSee)
+
+- 免签约支付宝与微信，自带监听，不需第三方软件，直接到个人账户
+
+[**laurieryayoi**](https://github.com/laurieryayoi)
+
+- 重做美化UI（~~援交~~圆角化）
+- 新版 Vue(SPA) 版界面
+- 重写节点列表，支持分级显示所有级别节点
+
+[**Sukka**](https://github.com/SukkaW)
+
+- Travis CI 持续集成
+- 单元测试
+- 全站 JavaScript 重写
+- 新版 Wiki 的搭建和维护
+
+</details>
+
+## 捐赠
+
+您对我们的帮助将是支持我们做下去的动力。您可以直接进行捐赠，也可以在购买部分产品或向他人推荐产品时从我们的返利链接购买。
+
+#### Anankke
+
+- [Anankke 很可爱请给 Anankke 钱](https://t.me/anankke/5)
+
+#### dumplin
+
+- [码支付-微信收款功能开通](https://codepay.fateqq.com/i/39756)
+
+#### galaxychuck
+
+- [hkserversolution-推荐UIM面板服务器放置](https://www.hkserversolution.com/aff.php?aff=60)
+
+#### laurieryayoi
+
+[laurieryayoi 的前端课程报名](https://t.me/kinokonominoco)
+
