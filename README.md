@@ -112,7 +112,7 @@ exit		#退出
 ![Snipaste_2019-07-19_17-17-28.png](https://i.loli.net/2019/07/19/5d318ac1f1d3790132.png)
 
 ## 维护日志
-
+- 新内容转移至 https://github.com/Baiyuetribe/SSPanel-Uim-Docker
 - 2019.07.19 修复数据库问题导致商品名称显示“???”字符问题
 - 2019.06.14 受`yangxuan8282`启发，使用alpine基础镜像重构镜像，体积更小、加入源码数据持久化、宿主机现在可以正常编辑源码
 - 2019.04 使用LNMP编写镜像，可实现无需宝塔快速部署sspanel面板（与宝塔兼容）。
