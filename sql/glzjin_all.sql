@@ -265,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `money` decimal(12,2) NOT NULL,
   `ref_by` int(11) NOT NULL DEFAULT '0',
   `expire_time` int(11) NOT NULL DEFAULT '0',
-  `method` varchar(64) NOT NULL DEFAULT 'rc4-md5',
+  `method` varchar(64) NOT NULL DEFAULT 'chacha20',
   `is_email_verify` tinyint(4) NOT NULL DEFAULT '0',
   `reg_ip` varchar(128) NOT NULL DEFAULT '127.0.0.1',
   `node_speedlimit` text NOT NULL,
@@ -618,7 +618,7 @@ CREATE TABLE `auto` ( `id` BIGINT NOT NULL AUTO_INCREMENT , `type` INT NOT NULL 
 ALTER TABLE `auto` ADD `sign` LONGTEXT NOT NULL AFTER `value`;ALTER TABLE `user` ADD `relay_enable` INT NOT NULL DEFAULT '0' AFTER `auto_reset_bandwidth`, ADD `relay_info` LONGTEXT NULL AFTER `relay_enable`;
 ALTER TABLE `ss_node` ADD `custom_rss` INT NOT NULL DEFAULT '0' AFTER `node_group`;
 
-ALTER TABLE `user` ADD `protocol` VARCHAR(128) NOT NULL DEFAULT 'origin' AFTER `relay_info`, ADD `protocol_param` VARCHAR(128) NULL DEFAULT NULL AFTER `protocol`, ADD `obfs` VARCHAR(128) NOT NULL DEFAULT 'plain' AFTER `protocol_param`, ADD `obfs_param` VARCHAR(128) NULL DEFAULT NULL AFTER `obfs`;
+ALTER TABLE `user` ADD `protocol` VARCHAR(128) NOT NULL DEFAULT 'auth_aes128_sha1' AFTER `relay_info`, ADD `protocol_param` VARCHAR(128) NULL DEFAULT NULL AFTER `protocol`, ADD `obfs` VARCHAR(128) NOT NULL DEFAULT 'tls1.2_ticket_auth' AFTER `protocol_param`, ADD `obfs_param` VARCHAR(128) NULL DEFAULT NULL AFTER `obfs`;
 
 
 
@@ -632,7 +632,7 @@ ALTER TABLE `ss_node` CHANGE `node_speedlimit` `node_speedlimit` DECIMAL(12,2) N
 ALTER TABLE `user`
   DROP `relay_enable`,
   DROP `relay_info`;
-ALTER TABLE `user` CHANGE `protocol` `protocol` VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'origin', CHANGE `obfs` `obfs` VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'plain';
+ALTER TABLE `user` CHANGE `protocol` `protocol` VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'auth_aes128_sha1', CHANGE `obfs` `obfs` VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'tls1.2_ticket_auth';
 CREATE TABLE `email_verify` ( `id` BIGINT NOT NULL AUTO_INCREMENT , `email` TEXT NOT NULL , `ip` TEXT NOT NULL , `code` TEXT NOT NULL , `expire_in` BIGINT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;ALTER TABLE `user` ADD `is_hide` INT NOT NULL DEFAULT '0' AFTER `disconnect_ip`;
 
 
