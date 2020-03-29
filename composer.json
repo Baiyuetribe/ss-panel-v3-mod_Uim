@@ -22,7 +22,6 @@
         "chen-see/chen-pay": "^1.0@dev",
         "league/omnipay": "^3",
         "lokielse/omnipay-alipay": "*",
-        "valzargaming/yasmin": "*",
         "khanamiryan/qrcode-detector-decoder": "*"
     },
     "autoload": {
