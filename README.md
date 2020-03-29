@@ -16,7 +16,7 @@
 
 ## 简介
 
-SSPanel UIM 是一款专为 Shadowsocks / ShadowsocksR / V2Ray 设计的多用户管理面板，基于 ss-panel-v3-mod 开发。
+SSPanel UIM 是一款专为 Shadowsocks / ShadowsocksR / V2Ray 设计的多用户管理面板，基于 ss-panel-v3-mod 开发。修复carchive/Yasmin缺失问题
 
 ## 特性
 

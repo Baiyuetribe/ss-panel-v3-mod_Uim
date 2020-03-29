@@ -1,0 +1,22 @@
+{
+    "name": "charlottedunois/eventemitter",
+    "type": "library",
+    "description": "This is an Event Emitter equivalent to Node.js' Event Emitter.",
+    "keywords": [ "events", "event", "emitter", "eventemitter" ],
+    "homepage": "https://github.com/CharlotteDunois/EventEmitter",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Charlotte Dunois",
+            "email": "github@charuru.moe"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CharlotteDunois\\Events\\": "src"
+        }
+    }
+}

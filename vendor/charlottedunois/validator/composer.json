@@ -1,0 +1,25 @@
+{
+    "name": "charlottedunois/validator",
+    "type": "library",
+    "description": "PHP Validator for stuff.",
+    "keywords": [ "validation" ],
+    "homepage": "https://github.com/CharlotteDunois/Validator",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Charlotte Dunois",
+            "email": "github@charuru.moe"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CharlotteDunois\\Validation\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "7"
+    }
+}
