@@ -16,6 +16,7 @@
         "illuminate/pagination": "5.2.*",
         "illuminate/database": "5.2.*",
         "sendgrid/sendgrid": "^5.1",
+        "ramsey/uuid": "^3.0@dev",        
         "esdeathlove/datatables": "^1.6",
         "cloudflare/sdk": "1.1.1",
         "chen-see/chen-pay": "^1.0@dev",
